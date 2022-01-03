@@ -26,7 +26,7 @@ export async function main(ns) {
         const stocks = ns.stock.getSymbols()
         for (const stock of stocks) {
             const position = ns.stock.getPosition(stock);
-            if (position[0]) {
+            if (position[SHARES_POSITION]) {
                 sellPositions(ns, stock, position[SHARES_POSITION]);
             }
             buyPositions(ns, stock, position[SHARES_POSITION]);
