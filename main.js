@@ -223,15 +223,17 @@ function getFreeRam(ns, servers) {
     return sortedFreeRams;
 }
 
-const hacksAvailable = [
-    "BruteSSH.exe",
-    "FTPCrack.exe",
-    "HTTPWorm.exe",
-    "relaySMTP.exe",
-    "SQLInject.exe",
-];
+// The hacks and the appropriate js function
+const hacksAvailable = {
+    "BruteSSH.exe": "brutessh",
+    "FTPCrack.exe": "ftpcrack",
+    "HTTPWorm.exe": "httpworm",
+    "relaySMTP.exe": "relaysmtp",
+    "SQLInject.exe": "sqlinject",
+}
  
 // scan all servers from home and hack them if we can
+// TODO: test this
 function scanAndHack(ns) {
     const servers = new Set(["home"]);
     scanAll("home", servers, ns);
@@ -243,9 +245,9 @@ function scanAndHack(ns) {
         }
 
         const portOpened = 0;
-        for (const exe of hacksAvailable) {
+        for (const exe in hacksAvailable) {
             if (ns.fileExists(exe)) {
-                ns.brutessh(server);
+                ns[exe](server);
                 portOpened++;
             }
         }
