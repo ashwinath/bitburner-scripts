@@ -1,5 +1,7 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+	const dryRun = ns.args[0] === "--dry-run";
+
 	let maxServers = ns.getPurchasedServerLimit();
 	let maxSize = ns.getPurchasedServerMaxRam();
 	let money = ns.getPlayer().money;
@@ -21,13 +23,16 @@ export async function main(ns) {
 	}
 
     ns.tprint("Buying " + maxServers + " " + ram + "GB servers")
-    for (let i = 0; i < maxServers; i++) {
-    	if (ns.serverExists(getServerName(i))) {
-    		ns.killall(getServerName(i));
-    		ns.deleteServer(getServerName(i));
+	if (!dryRun) {
+		for (let i = 0; i < maxServers; i++) {
+			if (ns.serverExists(getServerName(i))) {
+				ns.killall(getServerName(i));
+				ns.deleteServer(getServerName(i));
+			}
+	
+			ns.purchaseServer(getServerName(i), ram);
 		}
-    	ns.purchaseServer(getServerName(i), ram);
-    }
+	}
     ns.tprint("Done buying " + maxServers + " " + ram + "GB servers")
 }
 

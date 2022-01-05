@@ -244,10 +244,10 @@ function scanAndHack(ns) {
             continue;
         }
 
-        const portOpened = 0;
+        let portOpened = 0;
         for (const exe in hacksAvailable) {
             if (ns.fileExists(exe)) {
-                ns[exe](server);
+                ns[hacksAvailable[exe]](server);
                 portOpened++;
             }
         }
