@@ -276,6 +276,7 @@ async function installBackdoors(ns, servers) {
     try {
         for (const server of servers) {
             if (serversRequiringBackdoors.has(server)) {
+                // This function takes a lot of RAM, so comment it if not required.
                 await ns.installBackdoor(server)
             }
         }
