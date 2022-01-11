@@ -120,7 +120,7 @@ function manageAndHack(ns, freeRams, hackables, hackstates) {
 // returns ture means script was executed, false means it didnt
 function findPlaceToRun(ns, script, threads, freeRams, target) {
     const scriptRam = ns.getScriptRam(script);
-    let remaingThread = threads;
+    let remainingThreads = threads;
     while (freeRams.length > 0) {
         // try with first availiable host
         const host = freeRams[0].host;
@@ -129,7 +129,7 @@ function findPlaceToRun(ns, script, threads, freeRams, target) {
         // if not enough ram on host to even run 1 thread, remove the host from list
         if (ram < scriptRam) {
             freeRams.shift();
-        } else if (ram < scriptRam * remaingThread) {
+        } else if (ram < scriptRam * remainingThreads) {
             // else if the ram on the host is not enough to run all threads, just run as much as it can
             const threadForThisHost = Math.floor(ram / scriptRam)
  
@@ -141,21 +141,21 @@ function findPlaceToRun(ns, script, threads, freeRams, target) {
                 return findPlaceToRun(ns, script, threads, freeRams.slice(1), target)
             } else {
                 // if run successed update thread to run and remove this host from the list
-                remaingThread -= threadForThisHost
+                remainingThreads -= threadForThisHost
                 freeRams.shift()
             }
         } else {
             // try to run the script, at this point this will only fail if
             // the host is already running the script against the same target,
             // from an earlier cycle
-            if (ns.exec(script, host, remaingThread, target) === 0) {
+            if (ns.exec(script, host, remainingThreads, target) === 0) {
                 // if failed, than find the next host to run it, and return its result
                 if (!findPlaceToRun(ns, script, threads, freeRams.slice(1), target)) {
                     return false;
                 }
             } else {
                 // if run successed update the remaining ram for this host
-                freeRams[0].freeRam -= scriptRam * remaingThread
+                freeRams[0].freeRam -= scriptRam * remainingThreads
             }
  
             return true;
