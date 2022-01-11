@@ -23,7 +23,7 @@ export async function main(ns) {
     }
 
     for (;;) {
-        const stocks = ns.stock.getSymbols()
+        const stocks = ns.stock.getSymbols().sort((a, b) => ns.stock.getForecast(b) - ns.stock.getForecast(a));
         for (const stock of stocks) {
             const position = ns.stock.getPosition(stock);
             if (position[SHARES_POSITION]) {
